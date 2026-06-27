@@ -1,7 +1,7 @@
 import type { Context, Session } from 'koishi'
 import { h, Schema } from 'koishi'
 
-export const name = 'welcome'
+export const name = 'welcomego'
 
 declare module 'koishi' {
   interface User {
