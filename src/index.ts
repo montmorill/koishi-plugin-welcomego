@@ -15,8 +15,8 @@ export interface Config {
 }
 
 export const Config: Schema<Config> = Schema.object({
-  added: Schema.string().default('{at}，欢迎加入群聊！').description('加入群聊的模板'),
-  removed: Schema.string().default('{username}退出了群聊。').description('退出群聊的模板'),
+  added: Schema.string().default('{at}，欢迎加入群聊！').description('默认入群模板'),
+  removed: Schema.string().default('{username}退出了群聊。').description('默认退群模板'),
 })
 
 export function apply(ctx: Context, config: Config) {
@@ -25,27 +25,29 @@ export function apply(ctx: Context, config: Config) {
     removed: config.removed,
   })
 
-  function makeParams(session: Session): object {
-    const avatar = (session.user as any)?.avatar
-    return {
+  async function resolveParams(session: Session): Promise<object> {
+    await session.observeUser(['name'])
+    const avatar = session.event.user?.avatar
+    const params = {
       user: session.user,
       userId: session.userId,
       username: session.username,
       avatar,
-      img: h.img(avatar),
+      img: avatar ? h.img(avatar) : undefined,
       at: h.at(session.userId),
       channel: session.channel,
       channelId: session.channelId,
       guild: session.guild,
       guildId: session.guildId,
     }
+    return params
   }
 
   ctx.on('guild-member-added', async (session) => {
-    await session.send(session.text('added', makeParams(session)))
+    await session.send(session.text('added', await resolveParams(session)))
   })
 
   ctx.on('guild-member-removed', async (session) => {
-    await session.send(session.text('removed', makeParams(session)))
+    await session.send(session.text('removed', await resolveParams(session)))
   })
 }
