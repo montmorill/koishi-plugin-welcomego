@@ -1,6 +1,6 @@
 {
   "name": "koishi-plugin-welcomego",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "群聊欢迎告别插件，支持自定义模板",
   "typings": "lib/index.d.ts",
   "license": "MIT",

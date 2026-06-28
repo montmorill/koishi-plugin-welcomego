@@ -13,9 +13,9 @@ export interface Config {
 }
 
 export const Config: Schema<Config> = Schema.object({
-  added: Schema.string().default('{at}，欢迎加入群聊！').description('默认入群模板'),
-  removed: Schema.string().default('{username}退出了群聊。').description('默认退群模板'),
-})
+  added: Schema.string().default('{at}，欢迎加入群聊！').description('入群模板。'),
+  removed: Schema.string().default('{username}退出了群聊。').description('退群模板。'),
+}).description('模板设置')
 
 export function apply(ctx: Context, config: Config) {
   ctx.i18n.define('', {
